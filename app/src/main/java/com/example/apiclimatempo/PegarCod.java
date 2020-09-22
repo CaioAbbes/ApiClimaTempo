@@ -49,7 +49,7 @@ public class PegarCod {
         try {
 
             builtURI = Uri.parse(TEMPO_URL).buildUpon()
-                    .appendQueryParameter(API_KEY, "uS4MACAkFEZHV7pqqM1HDPocakID0704")
+                    .appendQueryParameter(API_KEY, "iyxyqiV6ZEwnFrs32cXHLb7beiu1z00z")
                     .appendQueryParameter(QUERY_PARAM, queryString)
                     .appendQueryParameter(LANGUAGE, "pt-br")
                     .appendQueryParameter(DETAILS, "false")
@@ -121,7 +121,7 @@ public class PegarCod {
         try {
 
             builtURI = Uri.parse(GEOURL).buildUpon()
-                    .appendQueryParameter(API_KEY, "uS4MACAkFEZHV7pqqM1HDPocakID0704")
+                    .appendQueryParameter(API_KEY, "iyxyqiV6ZEwnFrs32cXHLb7beiu1z00z")
                     .appendQueryParameter(QUERY_PARAM, coord)
                     .appendQueryParameter(LANGUAGE, "pt-br")
                     .appendQueryParameter(DETAILS, "false")
@@ -193,7 +193,7 @@ public class PegarCod {
         try {
             PREVTEMPO_URL= PREVTEMPO_URL.concat(Codigo);
             builtURI1= Uri.parse(PREVTEMPO_URL).buildUpon()
-                    .appendQueryParameter(API_KEY1, "uS4MACAkFEZHV7pqqM1HDPocakID0704")
+                    .appendQueryParameter(API_KEY1, "iyxyqiV6ZEwnFrs32cXHLb7beiu1z00z")
                     .appendQueryParameter(LANGUAGE, "pt-br")
                     .appendQueryParameter(DETAILS, "false")
 
@@ -258,7 +258,7 @@ public class PegarCod {
         try {
             PREVTEMPO_URL= PREVTEMPO_URL.concat(Codigo);
             builtURI1= Uri.parse(PREVTEMPO_URL).buildUpon()
-                    .appendQueryParameter(API_KEY1, "uS4MACAkFEZHV7pqqM1HDPocakID0704")
+                    .appendQueryParameter(API_KEY1, "iyxyqiV6ZEwnFrs32cXHLb7beiu1z00z")
                     .appendQueryParameter(LANGUAGE, "pt-br")
                     .appendQueryParameter(DETAILS, "false")
 
