@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">ClimaTempo</string>
+    <string name="btnCalcula">Buscar</string>
+    <string name="lblTempe">Digite uma cidade para saber a temperatura: </string>
+    <string name="txtTempe">Cidade</string>
+    <string name="btnGeo">Buscar cidade atual</string>
+    <string name="btnVoltar">Voltar </string>
+    <string name="lblClima">Clima: </string>
+    <string name="lblTemperatura">Temperatura: </string>
+    <string name="txtCidade"> Cidade: </string>
+    <string name="no_location">Localização Indisponível</string>
+    <string name="no_address_found">Endereço não disponível</string>
+    <string name="loading">Carregando…</string>
+    <string name="service_not_available">Serviço Indisponível</string>
+    <string name="invalid_lat_long_used">Coordenadas Inválidas</string>
+    <string name="start_tracking_location">Iniciar a Busca</string>
+    <string name="stop_tracking_location">Parar a Busca</string>
+    <string name="externa"> Toque para mais informações</string>
+    <string name="Ajuda"> Dúvidas </string>
+    <string name="Salvar"> Salvar </string>
+    <string name="Pegar"> Ler salvo </string>
+    <string name="AjudaZap"> Para mais ajuda clique no botão e fale com uma pessoa que te ajudará </string>
+
+    <string name="textview_hint">Clique no botão para iniciar
+    </string>
+    <string name="location_permission_denied">Permissão negada, autorize a aplicação</string>
+    <string name="str_empty" />
+    <string name="todo">TODO</string>
+</resources>
