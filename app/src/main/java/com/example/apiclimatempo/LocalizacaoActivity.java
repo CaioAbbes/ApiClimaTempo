@@ -67,18 +67,19 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local);
 
+        mPager = findViewById(R.id.pager);
         // Instantiate a ViewPager and a PagerAdapter.
         botao = findViewById(R.id.btnLocalTemp2);
         DatabaseHelper banco = new DatabaseHelper(LocalizacaoActivity.this);
         lista = banco.getPrevisaoProx();
         if(lista.size()==5){
-        mPager = findViewById(R.id.pager);
         pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(pagerAdapter);}
         botao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String[] coords = PegarLatLon();
+                Log.d("Teste pega","aaaa");
                 lat = coords[0];
                 lon = coords[1];
                 ConnectivityManager connMgr = (ConnectivityManager)
@@ -129,6 +130,7 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
     public String[] PegarLatLon() {
         String[] Coord = new String[2];
         if (!mTrackingLocation) {
+            Log.d("meeeeee", "aaaa!!");
             gpsTracker = new GpsTracker(this);
             lat = gpsTracker.getLatitude();
             lon = gpsTracker.getLongitude();
@@ -138,7 +140,9 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
             Coord[1] = lon;
             mTrackingLocation= true;
             return Coord;
+
         }
+
         else{
             Context context = getApplicationContext();
             CharSequence text = "Já buscando, espere por favor";
@@ -235,23 +239,27 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
 
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
+        public ScreenSlidePagerAdapter(@NonNull FragmentManager fm) {
             super(fm);
         }
+
+//        public ScreenSlidePagerAdapter(FragmentManager fm) {
+//            super(fm);
+        //}
 
         @Override
         public Fragment getItem(int position) {
 
-            botao.performClick();
+            /*botao.performClick();
             DatabaseHelper banco = new DatabaseHelper(LocalizacaoActivity.this);
             try {
                 lista = banco.getPrevisaoProx();
-                return new Localizacao(lista.get(position));
             }
             catch (Exception e) {
                 e.printStackTrace();
-                return new Fragment();
-            }
+             // return new Fragment();
+            }*/
+                return new Localizacao(lista.get(position));
         }
 
 

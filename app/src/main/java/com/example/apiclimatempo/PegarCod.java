@@ -27,7 +27,7 @@ public class PegarCod {
     private static String ATUALCONDICAOCIDADE = "https://dataservice.accuweather.com/currentconditions/v1/";
     // Parametros da api key, necessário para consultar
     private static final String API_KEY = "apikey"; //QUERY_PARAM
-    private static final String CHAVE = "iyxyqiV6ZEwnFrs32cXHLb7beiu1z00z"; //QUERY_PARAM
+    private static final String CHAVE = "EnxguYalmpedhq4zAhfRhWbh5QyCs4zw"; //QUERY_PARAM
 
     private static final String METRIC = "metric";
     // Parametro de pesquisa que será enviado pelo usuário

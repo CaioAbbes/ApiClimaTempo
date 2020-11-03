@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +49,7 @@ public class Localizacao extends Fragment {
     private TextView mTempLocal, mClimaLocal, mCidadeLocal, mDia;
     private GpsTracker gpsTracker;
     private boolean mTrackingLocation;
+    private ImageButton imgbuton,imgLiga;
 
     // Animação
     public SharedPreferences mPreferences;
@@ -80,6 +83,23 @@ public class Localizacao extends Fragment {
         mDia.setText(previsao.get_Data());
         mTempLocal.setText(previsao.get_Temperatura());
         mClimaLocal.setText(previsao.get_Clima());
+        imgbuton = v.findViewById(R.id.imageButton2);
+        imgLiga = v.findViewById(R.id.btnLigar);
+        imgLiga.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri number = Uri.parse("tel:+5511972503313");
+                Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+                startActivity(callIntent);
+            }
+        });
+        imgbuton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(getActivity(), Suporte.class);
+                startActivity(intent);
+            }
+        });
 
         return v;
     }

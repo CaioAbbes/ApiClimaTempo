@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void openActivityLocal(View view ){
         Intent intent= new Intent(this, LocalizacaoActivity.class);
         startActivity(intent);
+
     }
 
        public void buscaTemperatura(View view) {
