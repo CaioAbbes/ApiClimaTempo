@@ -1,82 +1,83 @@
 package com.example.apiclimatempo;
 
-import android.Manifest;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationServices;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class LocalizacaoActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String[]> {
-    private static final String TRACKING_LOCATION_KEY = "tracking_location";
-    // Constantes
-    private static final int REQUEST_LOCATION_PERMISSION = 1;
-    private static final String LATITUDE_KEY = "latitude";
-    private static final String LONGITUDE_KEY = "longitude";
-    private static final String CIDADE_KEY = "cidade";
-    private static final String LASTDATE_KEY = "data";
-    private static final String PREFERENCIAS_NAME = "com.example.android.LocalizacaoActivity";
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+
+public class LocalizacaoActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<String[]> {
+
+    private static final int NUM_PAGES = 5;
+
     public String lat;
     public String lon;
     // Views
-    private Button mLocationButton;
-    private TextView mTempLocal, mClimaLocal, mCidadeLocal;
     private GpsTracker gpsTracker;
-    private TextView tvLatitude,tvLongitude;
-    // private Location location;
-    // classes Location
-    private boolean mTrackingLocation;
-
-    // Animação
-    private AnimatorSet mRotateAnim;
-    // Shared preferences
-    private SharedPreferences mPreferences;
-    private String lastLatitude = "";
-    private String lastLongitude = "";
-    private String lastCidade = "";
+    public Previsao previsao;
+    public boolean mTrackingLocation;
+    /**
+     * Pager para troca de telas
+     */
+    private ViewPager mPager;
+    public Button botao;
+    /**
+     * O pager adapter, que popula o ViewPager com as pages.
+     */
+    private PagerAdapter pagerAdapter;
+    ArrayList<Previsao> lista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local);
-        mLocationButton = findViewById(R.id.btnLocalTemp);
-        mTempLocal = findViewById(R.id.tvTemperaturaRec);
-        mClimaLocal = findViewById(R.id.tvClimaRec);
-        mCidadeLocal = findViewById(R.id.tvCidadeRec);
 
-        // Listener do botão de localização.
-        mLocationButton.setOnClickListener(new View.OnClickListener() {
+        // Instantiate a ViewPager and a PagerAdapter.
+        botao = findViewById(R.id.btnLocalTemp2);
+        /*mPager = findViewById(R.id.pager);
+        pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(pagerAdapter);
+        DatabaseHelper banco = new DatabaseHelper(this);
+        lista = banco.getPrevisaoProx();*/
+        botao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] coords =  PegarLatLon();
+                String[] coords = PegarLatLon();
                 lat = coords[0];
                 lon = coords[1];
               /*  Log.d("Latitude:", lat);
@@ -87,16 +88,13 @@ public class LocalizacaoActivity extends AppCompatActivity implements LoaderMana
                 if (connMgr != null) {
                     networkInfo = connMgr.getActiveNetworkInfo();
                 }
-        /* Se a rede estiver disponivel e o campo de busca não estiver vazio
-         iniciar o Loader */
                 if (networkInfo != null && networkInfo.isConnected()
                         && lat.length() != 0) {
                     Bundle queryBundle = new Bundle();
                     queryBundle.putString("lat", lat);
                     queryBundle.putString("lon", lon);
                     getSupportLoaderManager().restartLoader(0, queryBundle, LocalizacaoActivity.this);
-                }
-                else {
+                } else {
                     Context context = getApplicationContext();
                     CharSequence text = "Latitude e longitude não encontradas";
                     int duration = Toast.LENGTH_SHORT;
@@ -106,15 +104,12 @@ public class LocalizacaoActivity extends AppCompatActivity implements LoaderMana
                 }
             }
         });
-        //inicializa as preferências do usuário
-        mPreferences = getSharedPreferences(PREFERENCIAS_NAME, MODE_PRIVATE);
-        //recupera as preferencias
-        recuperar();
     }
+
     public String[] PegarLatLon() {
         String[] Coord = new String[2];
         if (!mTrackingLocation) {
-            gpsTracker = new GpsTracker(LocalizacaoActivity.this);
+            gpsTracker = new GpsTracker(this);
             lat = gpsTracker.getLatitude();
             lon = gpsTracker.getLongitude();
 //            Log.d("Lat:", lat);
@@ -125,10 +120,6 @@ public class LocalizacaoActivity extends AppCompatActivity implements LoaderMana
         }
         return Coord;
     }
-        //inicializa as preferências do usuário
-        //mPreferences = getSharedPreferences(PREFERENCIAS_NAME, MODE_PRIVATE);
-        //recupera as preferencias
-        //recuperar();
 
     public Loader<String[]> onCreateLoader(int id, @Nullable Bundle args) {
         Log.d("Latitude:", lat);
@@ -141,77 +132,99 @@ public class LocalizacaoActivity extends AppCompatActivity implements LoaderMana
 
     }
 
-    @Override
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onLoadFinished(@NonNull Loader<String[]> loader, String[] data) {
         try {
-            // Converte a resposta em Json
-            JSONArray jsonArray = new JSONArray(data[0]);
-            // Obtem o JSONArray
-            JSONObject itemsObject = jsonArray.getJSONObject(0);
-            // inicializa o contador
-            String clima = null;
-            String temperatura = null;
-            String cidade = null;
-            // Procura pro resultados nos itens do array
-            while (clima == null && temperatura == null && cidade == null) {
-                // Obtem a informação
-                JSONObject temp = itemsObject.getJSONObject("Temperature");
-                JSONObject met = temp.getJSONObject("Metric");
-                //JSONObject city = temp.getJSONObject("City");
-                //  Obter autor e titulo para o item,
-                // erro se o campo estiver vazio
+            // Abre o Object que tá tudo
+            JSONObject jsonObjectTudo = new JSONObject(data[0]);
+            // Dentro do Array pega o JSONObject
+            Log.d("Acesso", "valores" + jsonObjectTudo);
+            JSONArray itemsArrayForecast = jsonObjectTudo.getJSONArray("DailyForecasts");
+            Log.d("Acesso", "Previsao" + itemsArrayForecast);
 
-                temperatura = met.getString("Value");
-                clima = itemsObject.getString("WeatherText");
-                mTempLocal.setText(temperatura);
-                mClimaLocal.setText(clima);
-                mCidadeLocal.setText(data[1]);
-                armazenar(lat, lon, data[1]);
+            // inicializa o contador
+
+            String clima;
+            String temperatura;
+            String cidade;
+            Date Datahj = null;
+
+            Integer icone;
+            for (int i = 0; i <= 4; i++) {
+                JSONObject ObjetoInfoPrev = itemsArrayForecast.getJSONObject(i);
+                JSONObject TemperaturaObj = ObjetoInfoPrev.getJSONObject("Temperature");
+                Date DataHJ = new Date();
+                Calendar c = Calendar.getInstance();
+                c.setTime(DataHJ);
+                c.add(Calendar.DATE, i);
+                Datahj = c.getTime();
+                JSONObject TemperaturaMinima = TemperaturaObj.getJSONObject("Minimum");
+                temperatura = TemperaturaMinima.getString("Value");
+
+                JSONObject Dia = ObjetoInfoPrev.getJSONObject("Day");
+                icone = Integer.valueOf(Dia.getString("Icon"));
+                clima = Dia.getString("IconPhrase");
+                cidade = data[1];
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                String Data = sdf.format(Datahj);
+                //armazenar(lat, lon, data[1]);
+                Log.d("Valores", "Dia" + Data);
+                Log.d("Valores", "Icone" + icone);
+                Log.d("Valores", "Clima" + clima);
+                Log.d("Valores", "Temperatura" + temperatura);
+                Log.d("Valores", cidade);
+
+                DatabaseHelper banco = new DatabaseHelper(this);
+                banco.insertDia(new Previsao(Data, temperatura, clima, icone, cidade));
+                if (banco.insertDia(new Previsao(Data, temperatura, clima, icone, cidade))) {
+                    Log.d("Banco", "Inseriu!");
+                } else {
+                    banco.updatePrevisao(new Previsao(Data, temperatura, clima, icone, cidade));
+                }
             }
+
         } catch (Exception e) {
-            // Se não receber um JSOn valido, informa ao usuário
             e.printStackTrace();
         }
+        Log.d("Valores", lista.size() + "");
     }
 
-    @Override
     public void onLoaderReset(@NonNull Loader<String[]> loader) {
 
     }
 
+
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(TRACKING_LOCATION_KEY, mTrackingLocation);
-        super.onSaveInstanceState(outState);
+    public void onBackPressed() {
+        if (mPager.getCurrentItem() == 0) {
+            // If the user is currently looking at the first step, allow the system to handle the
+            // Back button. This calls finish() on this activity and pops the back stack.
+            super.onBackPressed();
+        } else {
+            // Otherwise, select the previous step.
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+        }
     }
 
-    private void recuperar() {
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
 
+        @Override
+        public Fragment getItem(int position) {
+            if (lista.size() < 5) {
+                botao.performClick();
+                DatabaseHelper banco = new DatabaseHelper(LocalizacaoActivity.this);
+                lista = banco.getPrevisaoProx();
+                return new Localizacao(lista.get(position));
+            }
+            return new Localizacao(lista.get(position));
+        }
 
-        lastLatitude = mPreferences.getString(LATITUDE_KEY, "");
-        lastLongitude = mPreferences.getString(LONGITUDE_KEY, "");
-        long time = mPreferences.getLong(LASTDATE_KEY, 0);
-        lastCidade = mPreferences.getString(CIDADE_KEY, "");
-
-    }
-
-    private void armazenar (String latitude, String longitude, String cidade){
-        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-        preferencesEditor.putString(LATITUDE_KEY, latitude);
-        preferencesEditor.putString(LONGITUDE_KEY, longitude);
-        preferencesEditor.putLong(LASTDATE_KEY, System.currentTimeMillis());
-        preferencesEditor.putString(CIDADE_KEY, cidade);
-        preferencesEditor.apply();
-    }
-
-
-    public void LigarDev(View view){
-        Uri number = Uri.parse("tel:+5511972503313");
-        Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
-        startActivity(callIntent);
-    }
-    public void openActivitySuporte(View view ){
-        Intent intent= new Intent(this, Suporte.class);
-        startActivity(intent);
+        @Override
+        public int getCount() {
+            return NUM_PAGES;
+        }
     }
 }

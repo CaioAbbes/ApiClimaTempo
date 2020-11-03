@@ -22,12 +22,13 @@ public class PegarCod {
     //                                      http://dataservice.accuweather.com/locations/v1/cities/search?apikey=uS4MACAkFEZHV7pqqM1HDPocakID0704&q=S%C3%A3o%20Paulo
 
     private static final String TEMPO_URL = "https://dataservice.accuweather.com/locations/v1/cities/search?";
-    private static String PREVTEMPO_URL = "https://dataservice.accuweather.com/currentconditions/v1/";
+    private static String PREVTEMPO_URL = "https://dataservice.accuweather.com/forecasts/v1/daily/5day/";
     private static final String GEOURL = "https://dataservice.accuweather.com/locations/v1/cities/geoposition/search";
+    private static String ATUALCONDICAOCIDADE = "https://dataservice.accuweather.com/currentconditions/v1/";
     // Parametros da api key, necessário para consultar
     private static final String API_KEY = "apikey"; //QUERY_PARAM
+    private static final String CHAVE = "PJS6uEuexvvoz9sYvyap9G0ReYAwWq2c"; //QUERY_PARAM
     // Parametro de pesquisa que será enviado pelo usuário
-    private static final String API_KEY1 = "apikey"; //QUERY_PARAM
     private static final String QUERY_PARAM= "q"; //maxResults
     // Parametro do idioma
     private static final String LANGUAGE = "language";
@@ -49,12 +50,12 @@ public class PegarCod {
         try {
 
             builtURI = Uri.parse(TEMPO_URL).buildUpon()
-                    .appendQueryParameter(API_KEY, "iyxyqiV6ZEwnFrs32cXHLb7beiu1z00z")
+                    .appendQueryParameter(API_KEY, CHAVE)
                     .appendQueryParameter(QUERY_PARAM, queryString)
                     .appendQueryParameter(LANGUAGE, "pt-br")
                     .appendQueryParameter(DETAILS, "false")
                     .build();
-            Log.d("asdas1", "asd" + builtURI);
+            Log.d("Chgeou", "link pega cod" + builtURI);
             // Converte a URI para a URL.
 
             URL requestURL = new URL(builtURI.toString());
@@ -82,7 +83,7 @@ public class PegarCod {
             CodigoJSONString = builder.toString();
             JSONArray itemsArray = new JSONArray(CodigoJSONString);
             JSONObject obj = itemsArray.getJSONObject(0);
-            Log.d("azul","Chegou aq");
+            Log.d("azul","Chegou aquiii");
             Chave = obj.getString("Key");
 
         } catch (IOException | JSONException e) {
@@ -101,8 +102,6 @@ public class PegarCod {
             }
         }
         // escreve o Json no log
-        //Log.d(LOG_TAG, CodigoJSONString);
-
 
         return Chave;
     }
@@ -117,22 +116,20 @@ public class PegarCod {
         String coord= lat+","+lon;
         Uri builtURI;
         String CodigoJSONString = null;
-        Log.d("asdas0", "asd");
         try {
 
             builtURI = Uri.parse(GEOURL).buildUpon()
-                    .appendQueryParameter(API_KEY, "iyxyqiV6ZEwnFrs32cXHLb7beiu1z00z")
+                    .appendQueryParameter(API_KEY, CHAVE)
                     .appendQueryParameter(QUERY_PARAM, coord)
                     .appendQueryParameter(LANGUAGE, "pt-br")
                     .appendQueryParameter(DETAILS, "false")
                     .appendQueryParameter(toplevel, "true")
                     .build();
-            Log.d("asdas1", "asd" + builtURI);
             // Converte a URI para a URL.
 
             URL requestURL = new URL(builtURI.toString());
             urlConnection = (HttpURLConnection) requestURL.openConnection();
-            Log.d("asdas3", "asd" + urlConnection);
+            Log.d("Acesso", "PegarCod" + urlConnection);
             // urlConnection.setRequestMethod("GET");
             //ERRO AQUI
             urlConnection.connect();
@@ -154,7 +151,7 @@ public class PegarCod {
             }
             CodigoJSONString = builder.toString();
             JSONObject obj = new JSONObject(CodigoJSONString);
-            Log.d("azul","Chegou aq");
+            Log.d("Acesso","Conectou cod");
             Chave = obj.getString("Key");
             Cidade = obj.getString("LocalizedName");
 
@@ -191,14 +188,15 @@ public class PegarCod {
         Uri builtURI1;
         // Construção da URI de Busca
         try {
-            PREVTEMPO_URL= PREVTEMPO_URL.concat(Codigo);
-            builtURI1= Uri.parse(PREVTEMPO_URL).buildUpon()
-                    .appendQueryParameter(API_KEY1, "iyxyqiV6ZEwnFrs32cXHLb7beiu1z00z")
+            ATUALCONDICAOCIDADE= ATUALCONDICAOCIDADE.concat(Codigo);
+            builtURI1= Uri.parse(ATUALCONDICAOCIDADE).buildUpon()
+                    .appendQueryParameter(API_KEY, CHAVE)
                     .appendQueryParameter(LANGUAGE, "pt-br")
                     .appendQueryParameter(DETAILS, "false")
 
                     .build();
             Log.d("asdas", "asd" + builtURI1);
+
             // Converte a URI para a URL.
             URL requestURL = new URL(builtURI1.toString());
             urlConnection = (HttpURLConnection) requestURL.openConnection();
@@ -239,7 +237,7 @@ public class PegarCod {
         }
         // escreve o Json no log
        // Log.d(LOG_TAG, CodigoJSONString);
-
+        Log.d("JSOS", "JSON ATUALCIDADE" + CodigoJSONString);
         return CodigoJSONString;
 
     }
@@ -249,24 +247,25 @@ public class PegarCod {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String CodigoJSONString = null;
-        String Codigo = null;
-        Codigo = buscaCodigoLocal(lat, lon)[0];
-
+        String Codigo;
+            Codigo = buscaCodigoLocal(lat, lon)[0];
+        Log.d("Acesso", "COD" + Codigo);
         String Cidade = buscaCodigoLocal(lat, lon)[1];
         Uri builtURI1;
         // Construção da URI de Busca
         try {
             PREVTEMPO_URL= PREVTEMPO_URL.concat(Codigo);
             builtURI1= Uri.parse(PREVTEMPO_URL).buildUpon()
-                    .appendQueryParameter(API_KEY1, "iyxyqiV6ZEwnFrs32cXHLb7beiu1z00z")
+                    .appendQueryParameter(API_KEY, CHAVE)
                     .appendQueryParameter(LANGUAGE, "pt-br")
                     .appendQueryParameter(DETAILS, "false")
 
                     .build();
-            Log.d("asdas", "asd" + builtURI1);
+            Log.d("Acesso", "linkprev" + builtURI1);
             // Converte a URI para a URL.
             URL requestURL = new URL(builtURI1.toString());
             urlConnection = (HttpURLConnection) requestURL.openConnection();
+            Log.d("Acesso", "linkprev" + urlConnection);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
             // Busca o InputStream.
@@ -305,6 +304,7 @@ public class PegarCod {
         // escreve o Json no log
         //Log.d(LOG_TAG, CodigoJSONString);
         String [] ArraysVolta = new String[2];
+        Log.d("Acesso", "JSON FORECAS" + CodigoJSONString);
         ArraysVolta[0] = CodigoJSONString;
         ArraysVolta[1] = Cidade;
         return ArraysVolta;

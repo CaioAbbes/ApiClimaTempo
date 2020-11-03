@@ -33,8 +33,6 @@ import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
     private EditText nmCidade;
-    private TextView nmClima;
-    private TextView nmTemperatura;
     private Button saveButton,readButton;
     private String filename = "SampleFile.txt";
     private String filepath = "MyFileStorage";
@@ -46,8 +44,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         nmCidade = findViewById(R.id.txtCidade);
-        nmClima = findViewById(R.id.tvClima);
-        nmTemperatura = findViewById(R.id.tvTemperatura);
+        TextView nmClima = findViewById(R.id.tvClima);
+        TextView nmTemperatura = findViewById(R.id.tvTemperatura);
 
         if (getSupportLoaderManager().getLoader(0) != null) {
             getSupportLoaderManager().initLoader(0, null, this);
@@ -177,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 link = itemsObject.getString("MobileLink");
                     temperatura = met.getString("Value");
                     clima = itemsObject.getString("WeatherText");
+                Log.d("VALOR", "TEMP" + temperatura);
+                Log.d("VALOR", "LINK" + link);
+                Log.d("VALOR", "CLI" + clima);
                 openActivity2(temperatura, clima, link );
             }
         } catch (Exception e) {

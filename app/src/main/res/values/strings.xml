@@ -8,6 +8,10 @@
     <string name="lblClima">Clima: </string>
     <string name="lblTemperatura">Temperatura: </string>
     <string name="txtCidade"> Cidade: </string>
+    <string name="Teste"> Lorem Ipsum </string>
+    <string name="Clima"> Nublado </string>
+    <string name="Temperatura"> 34 </string>
+    <string name="Umidade"> Umidade </string>
     <string name="no_location">Localização Indisponível</string>
     <string name="no_address_found">Endereço não disponível</string>
     <string name="loading">Carregando…</string>
@@ -26,4 +30,7 @@
     <string name="location_permission_denied">Permissão negada, autorize a aplicação</string>
     <string name="str_empty" />
     <string name="todo">TODO</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

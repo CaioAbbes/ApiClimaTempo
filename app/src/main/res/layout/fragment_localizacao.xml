@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Localizacao">
+
+    <ImageView
+        android:id="@+id/ivDia"
+        android:layout_width="63dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/ic_dia"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCidadeRec"
+        android:contentDescription="@string/todo" />
+
+    <TextView
+        android:id="@+id/tvClimaRecDia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="40dp"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivDia" />
+
+    <TextView
+        android:id="@+id/tvClimaRecNoite"
+        android:layout_width="4dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="284dp"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvClimaRecDia" />
+
+    <!-- activity_screen_slide.xml -->
+
+    <TextView
+        android:id="@+id/tvTemperaturaRecMax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/amiko_semibold"
+        android:textSize="36sp"
+        app:layout_constraintStart_toEndOf="@+id/ivDia"
+        app:layout_constraintTop_toBottomOf="@+id/ivClimaDia" />
+
+    <TextView
+        android:id="@+id/tvCidadeRec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="36dp"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDia" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="44dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/common_google_signin_btn_text_dark_default"
+        android:contentDescription="@string/todo"
+        android:onClick="openActivitySuporte"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_message_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLigar" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="88dp"
+        android:layout_marginEnd="48dp"
+        android:text="@string/Ajuda"
+        app:layout_constraintEnd_toStartOf="@+id/btnLigar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnLigar"
+        android:layout_width="48dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="12dp"
+        android:background="#FFFFFF"
+        android:contentDescription="@string/todo"
+        android:onClick="LigarDev"
+        android:src="@drawable/ic_call_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvDia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="28dp"
+        android:clickable="false"
+        android:fontFamily="@font/amiko_semibold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivClimaDia"
+        android:layout_width="63dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="144dp"
+        android:layout_marginTop="128dp"
+        android:src="@drawable/ic_dia"
+        app:layout_constraintStart_toEndOf="@+id/tvCidadeRec"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivClimaNoite"
+        android:layout_width="63dp"
+        android:layout_height="67dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginBottom="248dp"
+        android:src="@drawable/ic_dia"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivNoite" />
+
+    <ImageView
+        android:id="@+id/ivNoite"
+        android:layout_width="70dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/ic_noite"
+        app:layout_constraintBottom_toTopOf="@+id/tvClimaRecNoite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvClimaRecDia" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
