@@ -21,7 +21,7 @@ public class activityResultado extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultado2);
-        Button button = (Button) findViewById(R.id.buttonVoltar);
+        Button button = findViewById(R.id.buttonVoltar);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

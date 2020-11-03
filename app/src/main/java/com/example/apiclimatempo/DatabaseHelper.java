@@ -8,26 +8,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "MyDBClimaTempo.db";
     public static final String PREVISAO_TABLE_NAME = "Previsao";
-    public static final String PREVISAO_ID = "id ";
-    public static final String PREVISAO_DATA = "Data ";
-    public static final String PREVISAO_CIDADE = "Cidade ";
-    public static final String PREVISAO_ICONE = "Icone ";
-    public static final String PREVISAO_CLIMA = "Clima ";
-    public static final String PREVISAO_TEMPERATURA = "Temperatura ";
+    public static final String PREVISAO_ID="id";
+    public static final String PREVISAO_DATA = "Data";
+    public static final String PREVISAO_CIDADE = "Cidade";
+    public static final String PREVISAO_ICONE = "Icone";
+    public static final String PREVISAO_CLIMA = "Clima";
+    public static final String PREVISAO_TEMPERATURA = "Temperatura";
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME , null, 3);
+        super(context, DATABASE_NAME , null, 4);
     }
 
-    @Override
+     @Override
     public void onCreate(SQLiteDatabase db) {
         // TODO Auto-generated method stub
         db.execSQL(
@@ -95,13 +91,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ArrayList<String> getAllPrevisao() {
-        ArrayList<String> array_list = new ArrayList<String>();
+        ArrayList<String> array_list = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from Previsao", null );
         res.moveToFirst();
 
-        while(res.isAfterLast() == false){
+        while(!res.isAfterLast()){
             array_list.add(res.getString(res.getColumnIndex(PREVISAO_TABLE_NAME)));
             res.moveToNext();
         }
@@ -113,18 +109,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * FROM Previsao ORDER BY id DESC LIMIT 5", null );
         res.moveToFirst();
-
         while(!res.isAfterLast()){
             Previsao p = new Previsao();
-            p.set_id(Integer.parseInt(res.getString(res.getColumnIndex(PREVISAO_ID))));
-            p.set_Data(res.getString(res.getColumnIndex(PREVISAO_DATA)));
-            p.set_Icone(Integer.parseInt(res.getString(res.getColumnIndex(PREVISAO_ICONE))));
-            p.set_Clima(res.getString(res.getColumnIndex(PREVISAO_CLIMA)));
-            p.set_Temperatura(res.getString(res.getColumnIndex(PREVISAO_TEMPERATURA)));
-            p.set_Cidade(res.getString(res.getColumnIndex(PREVISAO_CIDADE)));
-
-            lista.add(p);
-            res.moveToNext();
+                p.set_id(Integer.parseInt(res.getString(res.getColumnIndex(PREVISAO_ID))));
+            Log.d("Quantos: ","Id: "+(res.getString(res.getColumnIndex(PREVISAO_ID))));
+                p.set_Data(res.getString(res.getColumnIndex(PREVISAO_DATA)));
+            Log.d("Quantos: ","Data: "+(res.getString(res.getColumnIndex(PREVISAO_DATA))));
+                p.set_Icone(Integer.parseInt(res.getString(res.getColumnIndex(PREVISAO_ICONE))));
+            Log.d("Quantos: ","Icone: "+(res.getString(res.getColumnIndex(PREVISAO_ICONE))));
+                p.set_Clima(res.getString(res.getColumnIndex(PREVISAO_CLIMA)));
+            Log.d("Quantos: ",("Clima: "+ res.getString(res.getColumnIndex(PREVISAO_CLIMA))));
+                p.set_Temperatura(res.getString(res.getColumnIndex(PREVISAO_TEMPERATURA)));
+            Log.d("Quantos: ",("Temperatura: "+ res.getString(res.getColumnIndex(PREVISAO_TEMPERATURA))));
+                p.set_Cidade(res.getString(res.getColumnIndex(PREVISAO_CIDADE)));
+            Log.d("Quantos: ",("Cidade: "+ res.getString(res.getColumnIndex(PREVISAO_CIDADE))));
+                lista.add(p);
+                res.moveToNext();
         }
             Log.d("Quantos: ",lista.size()+"");
 

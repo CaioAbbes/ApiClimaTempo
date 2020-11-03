@@ -43,7 +43,6 @@ import java.util.Locale;
 
 public class LocalizacaoActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<String[]> {
 
-    private static final int NUM_PAGES = 5;
 
     public String lat;
     public String lon;
@@ -54,6 +53,7 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
     /**
      * Pager para troca de telas
      */
+    public Integer NUM_PAGES = 5;
     private ViewPager mPager;
     public Button botao;
     /**
@@ -69,6 +69,12 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
 
         // Instantiate a ViewPager and a PagerAdapter.
         botao = findViewById(R.id.btnLocalTemp2);
+        DatabaseHelper banco = new DatabaseHelper(LocalizacaoActivity.this);
+        lista = banco.getPrevisaoProx();
+        if(lista.size()==5){
+        mPager = findViewById(R.id.pager);
+        pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(pagerAdapter);}
         botao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +88,7 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
                     networkInfo = connMgr.getActiveNetworkInfo();
                 }
                 if (networkInfo != null && networkInfo.isConnected()
-                        && lat.length() != 0) {
+                        && lat != null) {
                     Bundle queryBundle = new Bundle();
                     queryBundle.putString("lat", lat);
                     queryBundle.putString("lon", lon);
@@ -93,18 +99,31 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(context, text, duration);
                     toast.show();
-
+                    gpsTracker.stopUsingGPS();
+                }
+                DatabaseHelper banco = new DatabaseHelper(LocalizacaoActivity.this);
+                try {
+                    lista = banco.getPrevisaoProx();
+                    mPager = findViewById(R.id.pager);
+                    pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+                    mPager.setAdapter(pagerAdapter);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
         //
+        /*try{
+        if(banco.numberOfRows()>=5) {
 
-        DatabaseHelper banco = new DatabaseHelper(LocalizacaoActivity.this);
-        lista = banco.getPrevisaoProx();
-        Log.d("LISTAAAAA",lista.size() + "");
-        mPager = findViewById(R.id.pager);
-        pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(pagerAdapter);
+        }
+        else{botao.performClick();}
+        }
+        catch (Exception e) {
+            botao.performClick();
+            e.printStackTrace();
+        }*/
     }
 
     public String[] PegarLatLon() {
@@ -117,8 +136,17 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
 //            Log.d("Lo:", lon);
             Coord[0] = lat;
             Coord[1] = lon;
+            mTrackingLocation= true;
             return Coord;
         }
+        else{
+            Context context = getApplicationContext();
+            CharSequence text = "Já buscando, espere por favor";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+        }
+        gpsTracker.stopUsingGPS();
         return Coord;
     }
 
@@ -174,13 +202,12 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
                 Log.d("Valores", "Clima" + clima);
                 Log.d("Valores", "Temperatura" + temperatura);
                 Log.d("Valores", cidade);
+                banco.insertDia(new Previsao(Data, temperatura, clima, icone, cidade));
 
+            }
+            if (banco.getAllPrevisao().size()==5) {
+                Log.d("Parabens", "funcionouuuuu!!");
 
-                if (banco.insertDia(new Previsao(Data, temperatura, clima, icone, cidade))) {
-                    Log.d("Banco", "Inseriu!");
-                } else {
-                    banco.updatePrevisao(new Previsao(Data, temperatura, clima, icone, cidade));
-                }
             }
 
         } catch (Exception e) {
@@ -217,9 +244,16 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
 
             botao.performClick();
             DatabaseHelper banco = new DatabaseHelper(LocalizacaoActivity.this);
-            lista = banco.getPrevisaoProx();
-            return new Localizacao(lista.get(position));
+            try {
+                lista = banco.getPrevisaoProx();
+                return new Localizacao(lista.get(position));
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                return new Fragment();
+            }
         }
+
 
         @Override
         public int getCount() {

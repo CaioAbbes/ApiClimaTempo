@@ -251,7 +251,7 @@ public class PegarCod {
         String CodigoJSONString = null;
         String Codigo;
             Codigo = buscaCodigoLocal(lat, lon)[0];
-        Log.d("Acesso", "COD" + Codigo);
+        Log.d("Acesso", "COD: " + Codigo);
         String Cidade = buscaCodigoLocal(lat, lon)[1];
         Uri builtURI1;
         // Construção da URI de Busca
