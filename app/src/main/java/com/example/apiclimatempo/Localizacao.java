@@ -77,7 +77,7 @@ public class Localizacao extends Fragment {
         mDia = v.findViewById(R.id.tvDia);
 
         mCidadeLocal.setText(previsao.get_Cidade());
-        mDia.setText(previsao.get_Data_id().toString());
+        mDia.setText(previsao.get_Data());
         mTempLocal.setText(previsao.get_Temperatura());
         mClimaLocal.setText(previsao.get_Clima());
 

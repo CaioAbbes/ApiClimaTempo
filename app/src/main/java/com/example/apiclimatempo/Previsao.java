@@ -19,10 +19,13 @@ public class Previsao implements Serializable{
     private String _Cidade;
 
     public Previsao(){   }
-    public Previsao(String Data,  String _Temperatura, String _Clima){
+    public Previsao(Integer _id,String Data,  String _Temperatura, String _Clima, Integer _Icone, String Cidade) {
+        this.set_id(_id);
         this.set_Data(Data);
         this.set_Temperatura(_Temperatura);
         this.set_Clima(_Clima);
+        this.set_Icone (_Icone);
+        this.set_Cidade(Cidade);
     }
 
 
@@ -36,10 +39,7 @@ public class Previsao implements Serializable{
     public Integer get_id() {
         return _id;
     }
-
-    public void set_id(Integer _id) {
-        this._id = _id;
-    }
+    public void set_id(Integer _id) {   this._id = _id;   }
 
     public String get_Data() {   return Data;  }
 

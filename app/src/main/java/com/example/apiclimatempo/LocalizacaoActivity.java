@@ -69,19 +69,12 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
 
         // Instantiate a ViewPager and a PagerAdapter.
         botao = findViewById(R.id.btnLocalTemp2);
-        /*mPager = findViewById(R.id.pager);
-        pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(pagerAdapter);
-        DatabaseHelper banco = new DatabaseHelper(this);
-        lista = banco.getPrevisaoProx();*/
         botao.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String[] coords = PegarLatLon();
                 lat = coords[0];
                 lon = coords[1];
-              /*  Log.d("Latitude:", lat);
-                Log.d("Longitude:", lon);*/
                 ConnectivityManager connMgr = (ConnectivityManager)
                         getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = null;
@@ -104,6 +97,14 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
                 }
             }
         });
+        //
+
+        DatabaseHelper banco = new DatabaseHelper(LocalizacaoActivity.this);
+        lista = banco.getPrevisaoProx();
+        Log.d("LISTAAAAA",lista.size() + "");
+        mPager = findViewById(R.id.pager);
+        pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(pagerAdapter);
     }
 
     public String[] PegarLatLon() {
@@ -148,7 +149,7 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
             String temperatura;
             String cidade;
             Date Datahj = null;
-
+            DatabaseHelper banco = new DatabaseHelper(this);
             Integer icone;
             for (int i = 0; i <= 4; i++) {
                 JSONObject ObjetoInfoPrev = itemsArrayForecast.getJSONObject(i);
@@ -174,8 +175,7 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
                 Log.d("Valores", "Temperatura" + temperatura);
                 Log.d("Valores", cidade);
 
-                DatabaseHelper banco = new DatabaseHelper(this);
-                banco.insertDia(new Previsao(Data, temperatura, clima, icone, cidade));
+
                 if (banco.insertDia(new Previsao(Data, temperatura, clima, icone, cidade))) {
                     Log.d("Banco", "Inseriu!");
                 } else {
@@ -186,7 +186,7 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.d("Valores", lista.size() + "");
+        /*Log.d("Valores", lista.size() + "");*/
     }
 
     public void onLoaderReset(@NonNull Loader<String[]> loader) {
@@ -206,6 +206,7 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
         }
     }
 
+
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -213,18 +214,16 @@ public class LocalizacaoActivity extends FragmentActivity implements LoaderManag
 
         @Override
         public Fragment getItem(int position) {
-            if (lista.size() < 5) {
-                botao.performClick();
-                DatabaseHelper banco = new DatabaseHelper(LocalizacaoActivity.this);
-                lista = banco.getPrevisaoProx();
-                return new Localizacao(lista.get(position));
-            }
+
+            botao.performClick();
+            DatabaseHelper banco = new DatabaseHelper(LocalizacaoActivity.this);
+            lista = banco.getPrevisaoProx();
             return new Localizacao(lista.get(position));
         }
 
         @Override
         public int getCount() {
-            return NUM_PAGES;
+            return lista.size();
         }
     }
 }
